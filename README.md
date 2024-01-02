@@ -90,8 +90,4 @@ Use this as a template for your project, ready loaded with user registration and
 
 If you find issues or have suggestions for improvements, feel free to open an issue or create a pull request.
 
-## License 📝
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
 ---
