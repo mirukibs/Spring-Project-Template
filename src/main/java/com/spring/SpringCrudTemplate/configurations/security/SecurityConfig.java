@@ -44,7 +44,6 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
                             "api/v1/**",
-                            "/events/**",
                             "/v3/api-docs",
                             "/v3/api-docs/**",
                             "/configuration/ui",
