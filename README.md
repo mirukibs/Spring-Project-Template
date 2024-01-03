@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Spring Crud Template is a kickstart project designed to accelerate the development of CRUD applications using Spring Boot version 3.2.0 and Java 17. This template includes a user registration and authentication implementing JWT tokens and Spring Security, providing a secure foundation for your application.
+The Spring Crud Template is a kickstart project designed to accelerate the development of your applications using Spring Boot version 3.2.0 and Java 17. This template includes a user registration and authentication implementing JWT tokens and Spring Security, providing a secure foundation for your application.
 
 ## Features 🚀
 
