@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+import static com.spring.SpringCrudTemplate.configurations.EmailValidator.validateEmail;
+
 @Service
 @AllArgsConstructor
 public class RegistrationService {
@@ -28,33 +30,47 @@ public class RegistrationService {
 
 
     public ResponseEntity<String> registerUser(RegistrationDto request) {
-        // TODO: Validate email
+        validateEmail(request.getEmail());
 
-        AppUser appUser = new AppUser();
-        appUser.setFirstName(request.getFirstname());
-        appUser.setLastName(request.getLastname());
-        appUser.setEmail(request.getEmail());
-        appUser.setPassword(request.getPassword());
-        Role role = roleRepository.findByName("USER").orElseThrow(() -> new RuntimeException("Role not found: USER"));
+        AppUser appUser = createAppUserFromRequest(request);
+        Role role = getRoleByName();
         appUser.setRoles(Collections.singletonList(role));
 
         return appUserService.signUpUser(appUser);
     }
 
-    // Method to retrieve the user ID after saving the AppUser instance
     public Long getSavedUserId(String userEmail) {
         try {
-            AppUser savedUser = appUserRepository.findByEmail(userEmail)
-                    .orElseThrow(() -> new IllegalStateException("User not found after registration"));
-
+            AppUser savedUser = findUserByEmail(userEmail);
             return savedUser.getUserID();
         } catch (Exception e) {
-            // Log the exception and return a default or meaningful value
-            log.error("Error retrieving user ID after registration for email: {}", userEmail, e);
-
-            return -1L;
+            handleUserRetrievalError(userEmail, e);
+            return -1L; // You might want to throw an exception or handle it differently in a production scenario
         }
     }
 
+
+    private AppUser createAppUserFromRequest(RegistrationDto request) {
+        AppUser appUser = new AppUser();
+        appUser.setFirstName(request.getFirstname());
+        appUser.setLastName(request.getLastname());
+        appUser.setEmail(request.getEmail());
+        appUser.setPassword(request.getPassword());
+        return appUser;
+    }
+
+    private Role getRoleByName() {
+        return roleRepository.findByName("USER")
+                .orElseThrow(() -> new RuntimeException("Role not found: " + "USER"));
+    }
+
+    private AppUser findUserByEmail(String userEmail) {
+        return appUserRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new IllegalStateException("User not found after registration"));
+    }
+
+    private void handleUserRetrievalError(String userEmail, Exception e) {
+        log.error("Error retrieving user ID after registration for email: {}", userEmail, e);
+    }
 }
 
