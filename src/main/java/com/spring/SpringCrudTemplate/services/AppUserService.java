@@ -32,48 +32,40 @@ public class AppUserService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
         AppUser appUser = appUserRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
 
-
         return new User(appUser.getUsername(), appUser.getPassword(), mapRolesToAuthorities(appUser.getRoles()));
+    }
+
+    public ResponseEntity<String> signUpUser(AppUser appUser) {
+        if (userExists(appUser.getEmail())) {
+            log.error("User registration failed. Email {} is already taken.", appUser.getEmail());
+            return new ResponseEntity<>("Email already taken", HttpStatus.CONFLICT);
+        }
+
+        try {
+            encodeAndSaveUser(appUser);
+            log.info("User registered successfully. Email: {}", appUser.getEmail());
+            return new ResponseEntity<>("Congratulations! You have been registered successfully.", HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.error("User registration failed unexpectedly. Email: {}", appUser.getEmail(), e);
+            return new ResponseEntity<>("Internal Server Error.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private boolean userExists(String email) {
+        return appUserRepository.findByEmail(email).isPresent();
+    }
+
+    private void encodeAndSaveUser(AppUser appUser) {
+        String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
+        appUser.setPassword(encodedPassword);
+        appUserRepository.save(appUser);
     }
 
     private Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
-
-    public ResponseEntity<String> signUpUser(AppUser appUser) {
-        // Check if the user already exists
-        boolean userExists = appUserRepository.findByEmail(appUser.getEmail()).isPresent();
-
-        if (userExists) {
-            // Log the conflict situation
-            log.error("User registration failed. Email {} is already taken.", appUser.getEmail());
-
-            // Return a 409 Conflict status with an error message
-            return new ResponseEntity<>("Email already taken", HttpStatus.CONFLICT);
-        }
-
-        try {
-            // Hash the user's password before saving to the db
-            String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
-            appUser.setPassword(encodedPassword);
-
-            // Save the user to the db
-            appUserRepository.save(appUser);
-
-            // Return a 201 Created status with a success message
-            return new ResponseEntity<>("Congratulation! You have been registered successfully.", HttpStatus.CREATED);
-        } catch (Exception e) {
-
-            // Log any unexpected exception
-            log.error("User registration failed unexpectedly. Email: {}", appUser.getEmail(), e);
-
-            // Return a 500 Internal Server Error status with an error message
-            return new ResponseEntity<>("Internal Server Error.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
 }
