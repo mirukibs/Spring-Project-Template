@@ -1,4 +1,4 @@
-package com.spring.SpringCrudTemplate.configurations;
+package com.spring.SpringCrudTemplate.configurations.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

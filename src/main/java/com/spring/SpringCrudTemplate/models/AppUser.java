@@ -9,6 +9,23 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Represents an application user in the system.
+ *
+ * This class serves as a template for creating user entities with associated roles.
+ * Extend or modify this class based on your specific project requirements.
+ *
+ * Class Overview:
+ * - Annotated with JPA annotations for persistence.
+ * - Utilizes Lombok annotations to automatically generate getters, setters, constructors, and other boilerplate code.
+ * - Includes fields for user details such as first name, last name, email, password, and associated roles.
+ * - Defines a sequence generator for generating unique user IDs.
+ *
+ * Note: Developers should review and adapt this class based on project-specific requirements and best practices.
+ */
+
+
 @Getter
 @Setter
 @AllArgsConstructor

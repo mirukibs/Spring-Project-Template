@@ -1,4 +1,4 @@
-package com.spring.SpringCrudTemplate.configurations;
+package com.spring.SpringCrudTemplate.configurations.security;
 
 import com.spring.SpringCrudTemplate.models.Role;
 import com.spring.SpringCrudTemplate.repositories.RoleRepository;
