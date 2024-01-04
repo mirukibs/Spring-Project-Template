@@ -7,6 +7,7 @@ import com.spring.SpringCrudTemplate.configurations.JWT.JWTGenerator;
 import com.spring.SpringCrudTemplate.services.RegistrationService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,25 @@ public class RegistrationController {
     private final JWTGenerator jwtGenerator;
 
     @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String register(@RequestBody RegistrationDto userRequest) {
-        return registrationService.registerUser(userRequest);
+    public ResponseEntity<String> register(@RequestBody RegistrationDto userRequest) {
+        ResponseEntity<String> responseEntity = registrationService.registerUser(userRequest);
+
+        // Check if the registration was successful (status code 201)
+        if (responseEntity.getStatusCode() == HttpStatus.CREATED) {
+
+            // Extract the user ID from the response body or generate it based on your logic
+            Long userId = registrationService.getSavedUserId(userRequest.getEmail());
+
+            // Create the Location header
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.LOCATION, "/users/" + userId);
+
+            // Combine the headers and body from the registration service response
+            return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(responseEntity.getBody());
+        }
+
+        // If registration was not successful, return the original response
+        return responseEntity;
     }
 
 
