@@ -75,6 +75,7 @@ public class RegistrationController {
         }
     }
 
+
     /**
      * Create a location header for the newly registered user.
      *
@@ -86,6 +87,7 @@ public class RegistrationController {
         headers.add(HttpHeaders.LOCATION, "/users/" + userId);
         return headers;
     }
+
 
     /**
      * Authenticate the user based on login credentials.

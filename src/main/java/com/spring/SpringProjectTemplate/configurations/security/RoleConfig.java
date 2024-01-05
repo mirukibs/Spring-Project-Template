@@ -31,6 +31,7 @@ public class RoleConfig {
         // Add more predefined roles as needed
     }
 
+
     /**
      * Creates a role if it does not already exist in the repository.
      *

@@ -65,6 +65,7 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
         return http.build();
     }
 
+
     /**
      * Configures the authentication manager for the application.
      *
@@ -78,6 +79,7 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+
     /**
      * Configures the DAO authentication provider for the application.
      *
@@ -90,6 +92,7 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
         provider.setUserDetailsService(appUserService);
         return provider;
     }
+
 
     /**
      * Creates and configures the JWT authentication filter.
