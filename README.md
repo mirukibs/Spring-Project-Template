@@ -40,17 +40,17 @@ Follow these steps to get the project up and running on your local machine.
 
 1.  **Navigate to the Template Repository:**
     Visit the [Spring Project Template Repository](https://github.com/mirukibs/Spring-Project-Template) on GitHub.
-    ![Screenshot from 2024-01-05 14-14-29.png](..%2F..%2FPictures%2FScreenshots%2FScreenshot%20from%202024-01-05%2014-14-29.png)
+    ![Screenshot from 2024-01-05 14-14-29.png](assets%2FScreenshot%20from%202024-01-05%2014-14-29.png)
 
 2.  **Click on the "Use this template" button:**
-    ![Screenshot from 2024-01-05 14-14-51.png](..%2F..%2FPictures%2FScreenshots%2FScreenshot%20from%202024-01-05%2014-14-51.png)
+    ![Screenshot from 2024-01-05 14-14-51.png](assets%2FScreenshot%20from%202024-01-05%2014-14-51.png)
 
 4. **Click on the "Create a new repository" button:**
-    ![Screenshot from 2024-01-05 14-15-28.png](..%2F..%2FPictures%2FScreenshots%2FScreenshot%20from%202024-01-05%2014-15-28.png)
+    ![Screenshot from 2024-01-05 14-15-28.png](assets%2FScreenshot%20from%202024-01-05%2014-15-28.png)
 
 3.  **Provide a Repository Name and Description:**
     Set a name for your new repository based on the template. Optionally, add a description.
-    ![Screenshot from 2024-01-05 14-16-41.png](..%2F..%2FPictures%2FScreenshots%2FScreenshot%20from%202024-01-05%2014-16-41.png)
+    ![Screenshot from 2024-01-05 14-16-41.png](assets%2FScreenshot%20from%202024-01-05%2014-16-41.png)
 
 4.  **Complete setting up your repository:**
     Set up your repository by selecting the visibility, adding collaborators, and initializing the repository with a README. Include other setups of your choice then click on the "Create repository" button.
