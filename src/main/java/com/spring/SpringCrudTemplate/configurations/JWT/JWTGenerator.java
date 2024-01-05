@@ -15,24 +15,35 @@ import java.util.Date;
 @Component
 public class JWTGenerator {
 
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    // The secret key used for JWT signing.
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
+    /**
+     * Generates a JWT token based on the provided authentication information.
+     *
+     * @param authentication The authentication object containing user details.
+     * @return The generated JWT token.
+     */
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
+        Date expirationDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
 
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt( new Date())
-                .setExpiration(expireDate)
-                .signWith(key,SignatureAlgorithm.HS512)
+                .setIssuedAt(currentDate)
+                .setExpiration(expirationDate)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
-        System.out.println("New token :");
-        System.out.println(token);
-        return token;
     }
-    public String getUsernameFromJWT(String token){
+
+    /**
+     * Extracts the username from a JWT token.
+     *
+     * @param token The JWT token.
+     * @return The username extracted from the token.
+     */
+    public String getUsernameFromJWT(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -41,6 +52,13 @@ public class JWTGenerator {
         return claims.getSubject();
     }
 
+    /**
+     * Validates the integrity and expiration of a JWT token.
+     *
+     * @param token The JWT token to validate.
+     * @return True if the token is valid; otherwise, false.
+     * @throws AuthenticationCredentialsNotFoundException If the token is expired or has an invalid signature.
+     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -49,8 +67,7 @@ public class JWTGenerator {
                     .parseClaimsJws(token);
             return true;
         } catch (Exception ex) {
-            throw new AuthenticationCredentialsNotFoundException("JWT was exprired or incorrect", ex.fillInStackTrace());
+            throw new AuthenticationCredentialsNotFoundException("JWT verification failed: " + ex.getMessage(), ex);
         }
     }
-
 }

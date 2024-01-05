@@ -1,8 +1,8 @@
 package com.spring.SpringCrudTemplate.controllers;
 
 import com.spring.SpringCrudTemplate.DTOs.AuthResponseDTO;
-import com.spring.SpringCrudTemplate.DTOs.LoginDto;
-import com.spring.SpringCrudTemplate.DTOs.RegistrationDto;
+import com.spring.SpringCrudTemplate.DTOs.LoginDTO;
+import com.spring.SpringCrudTemplate.DTOs.RegistrationDTO;
 import com.spring.SpringCrudTemplate.configurations.JWT.JWTGenerator;
 import com.spring.SpringCrudTemplate.services.RegistrationService;
 import lombok.AllArgsConstructor;
@@ -31,37 +31,41 @@ public class RegistrationController {
     private final JWTGenerator jwtGenerator;
 
     @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> register(@RequestBody RegistrationDto userRequest) {
+    public ResponseEntity<String> register(@RequestBody RegistrationDTO userRequest) {
         ResponseEntity<String> responseEntity = registrationService.registerUser(userRequest);
 
-        // Check if the registration was successful (status code 201)
         if (responseEntity.getStatusCode() == HttpStatus.CREATED) {
-
-            // Extract the user ID from the response body or generate it based on your logic
             Long userId = registrationService.getSavedUserId(userRequest.getEmail());
-
-            // Create the Location header
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.LOCATION, "/users/" + userId);
-
-            // Combine the headers and body from the registration service response
+            HttpHeaders headers = createLocationHeader(userId);
             return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(responseEntity.getBody());
         }
 
-        // If registration was not successful, return the original response
         return responseEntity;
     }
 
-
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDto loginDto){
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginDto.getUsername(),
-                        loginDto.getPassword()));
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginRequest) {
+        Authentication authentication = authenticateUser(loginRequest);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication);
-        return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
+        return ResponseEntity.ok(new AuthResponseDTO(token));
+    }
+
+
+    private HttpHeaders createLocationHeader(Long userId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.LOCATION, "/users/" + userId);
+        return headers;
+    }
+
+
+    private Authentication authenticateUser(LoginDTO loginRequest) {
+        return authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
     }
 
 }

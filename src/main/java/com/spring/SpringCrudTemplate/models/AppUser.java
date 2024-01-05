@@ -25,40 +25,30 @@ import java.util.List;
  * Note: Developers should review and adapt this class based on project-specific requirements and best practices.
  */
 
-
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class AppUser {
 
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 1
-    )
-
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userID;
 
     private String firstName;
 
     private String lastName;
 
+    @Column(unique = true)
     private String email;
 
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userID"),
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userID"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles = new ArrayList<>();
-
 
     public AppUser(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -67,9 +57,7 @@ public class AppUser {
         this.password = password;
     }
 
-
     public String getUsername() {
         return email;
     }
-
 }

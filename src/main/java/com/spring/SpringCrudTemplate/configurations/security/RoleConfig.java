@@ -26,8 +26,7 @@ public class RoleConfig {
     }
 
     private void createRoleIfNotExists(String roleName) {
-        Optional<Role> existingRole = roleRepository.findByName(roleName);
-        if (existingRole.isEmpty()) {
+        if (!roleRepository.existsByName(roleName)) {
             Role role = new Role();
             role.setName(roleName);
             roleRepository.save(role);

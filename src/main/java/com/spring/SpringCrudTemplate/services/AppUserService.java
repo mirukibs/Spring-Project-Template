@@ -24,48 +24,66 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class AppUserService implements UserDetailsService {
-    private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
+    private static final String USER_NOT_FOUND_MSG = "User with email %s not found";
+    private static final String EMAIL_ALREADY_TAKEN_MSG = "User registration failed. Email %s is already taken.";
+    private static final String REGISTRATION_SUCCESSFUL_MSG = "User registered successfully. Email: %s";
+    private static final String REGISTRATION_FAILED_MSG = "User registration failed unexpectedly. Email: %s";
 
     private final AppUserRepository appUserRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private static final Logger log = LoggerFactory.getLogger(AppUserService.class);
 
-
     @Override
     public UserDetails loadUserByUsername(String email) {
-        AppUser appUser = appUserRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+        try {
+            AppUser appUser = appUserRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
 
-        return new User(appUser.getUsername(), appUser.getPassword(), mapRolesToAuthorities(appUser.getRoles()));
+            return new User(appUser.getUsername(), appUser.getPassword(), mapRolesToAuthorities(appUser.getRoles()));
+        } catch (Exception e) {
+            log.error("Error during user retrieval for email: {}", email, e);
+            throw e;
+        }
     }
 
     public ResponseEntity<String> signUpUser(AppUser appUser) {
         if (userExists(appUser.getEmail())) {
-            log.error("User registration failed. Email {} is already taken.", appUser.getEmail());
+            log.error(EMAIL_ALREADY_TAKEN_MSG, appUser.getEmail());
             return new ResponseEntity<>("Email already taken", HttpStatus.CONFLICT);
         }
 
         try {
             encodeAndSaveUser(appUser);
-            log.info("User registered successfully. Email: {}", appUser.getEmail());
+            log.info(REGISTRATION_SUCCESSFUL_MSG, appUser.getEmail());
             return new ResponseEntity<>("Congratulations! You have been registered successfully.", HttpStatus.CREATED);
         } catch (Exception e) {
-            log.error("User registration failed unexpectedly. Email: {}", appUser.getEmail(), e);
+            log.error(String.format(REGISTRATION_FAILED_MSG, appUser.getEmail()), e);
             return new ResponseEntity<>("Internal Server Error.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     private boolean userExists(String email) {
-        return appUserRepository.findByEmail(email).isPresent();
+        try {
+            return appUserRepository.findByEmail(email).isPresent();
+        } catch (Exception e) {
+            log.error("Error checking if user exists for email: {}", email, e);
+            throw e;
+        }
     }
 
     private void encodeAndSaveUser(AppUser appUser) {
-        String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
-        appUser.setPassword(encodedPassword);
-        appUserRepository.save(appUser);
+        try {
+            String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
+            appUser.setPassword(encodedPassword);
+            appUserRepository.save(appUser);
+        } catch (Exception e) {
+            log.error("Error encoding and saving user for email: {}", appUser.getEmail(), e);
+            throw e;
+        }
     }
 
     private Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
+
 }

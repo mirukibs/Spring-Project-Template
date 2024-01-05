@@ -1,6 +1,8 @@
 package com.spring.SpringCrudTemplate.services;
 
-import com.spring.SpringCrudTemplate.DTOs.RegistrationDto;
+import com.spring.SpringCrudTemplate.DTOs.RegistrationDTO;
+import com.spring.SpringCrudTemplate.exceptions.RoleNotFoundException;
+import com.spring.SpringCrudTemplate.exceptions.UserNotFoundException;
 import com.spring.SpringCrudTemplate.models.AppUser;
 import com.spring.SpringCrudTemplate.models.Role;
 import com.spring.SpringCrudTemplate.repositories.AppUserRepository;
@@ -10,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -29,7 +32,7 @@ public class RegistrationService {
     private static final Logger log = LoggerFactory.getLogger(RegistrationService.class);
 
 
-    public ResponseEntity<String> registerUser(RegistrationDto request) {
+    public ResponseEntity<String> registerUser(RegistrationDTO request) {
         validateEmail(request.getEmail());
 
         AppUser appUser = createAppUserFromRequest(request);
@@ -43,14 +46,13 @@ public class RegistrationService {
         try {
             AppUser savedUser = findUserByEmail(userEmail);
             return savedUser.getUserID();
-        } catch (Exception e) {
+        } catch (UsernameNotFoundException e) {
             handleUserRetrievalError(userEmail, e);
-            return -1L; // You might want to throw an exception or handle it differently in a production scenario
+            throw e; // Re-throw the custom exception to indicate the error
         }
     }
 
-
-    private AppUser createAppUserFromRequest(RegistrationDto request) {
+    private AppUser createAppUserFromRequest(RegistrationDTO request) {
         AppUser appUser = new AppUser();
         appUser.setFirstName(request.getFirstname());
         appUser.setLastName(request.getLastname());
@@ -61,12 +63,12 @@ public class RegistrationService {
 
     private Role getRoleByName() {
         return roleRepository.findByName("USER")
-                .orElseThrow(() -> new RuntimeException("Role not found: " + "USER"));
+                .orElseThrow(() -> new RoleNotFoundException("Role not found: USER"));
     }
 
     private AppUser findUserByEmail(String userEmail) {
         return appUserRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new IllegalStateException("User not found after registration"));
+                .orElseThrow(() -> new UserNotFoundException("User not found after registration"));
     }
 
     private void handleUserRetrievalError(String userEmail, Exception e) {
