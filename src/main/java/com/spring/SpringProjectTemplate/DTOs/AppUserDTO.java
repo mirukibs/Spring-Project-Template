@@ -6,7 +6,6 @@ import lombok.*;
  * Data Transfer Object (DTO) representing an application user.
  * This class serves as a simplified version of the AppUser entity for data exchange.
  */
-
 @Getter
 @Setter
 @NoArgsConstructor
