@@ -69,10 +69,10 @@ public class RegistrationController {
             Authentication authentication = authenticateUser(loginRequest);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtGenerator.generateToken(authentication);
-            return ResponseEntity.ok(new AuthResponseDTO("Login successful.", token));
+            return ResponseEntity.ok(new AuthResponseDTO("Successful login!", token));
         } catch (AuthenticationException e) {
             // Handle authentication failure
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponseDTO("Invalid credentials.", null));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponseDTO("Failed login! Invalid credentials.", null));
         }
     }
 
