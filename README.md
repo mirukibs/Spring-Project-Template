@@ -16,8 +16,6 @@ The Spring Project Template is a kickstart project designed to accelerate the de
 
 - **Spring Security:** Ensures robust security measures to protect your application.
 
-- **CRUD Operations:** Boilerplate code for basic CRUD operations, allowing developers to focus on business logic.
-
 - **Swagger Documentation:** This project comes with a Swagger UI to document your API endpoints. Access the Swagger UI [here](http://localhost:8080/swagger-ui.html) after you run the application.
 
 ## Getting Started 🛠️
