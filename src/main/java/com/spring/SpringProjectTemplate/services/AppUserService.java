@@ -58,6 +58,7 @@ public class AppUserService implements UserDetailsService {
         }
     }
 
+
     /**
      * Sign up a new user and handle the registration process.
      *
@@ -83,6 +84,7 @@ public class AppUserService implements UserDetailsService {
         }
     }
 
+
     /**
      * Checks if a user with the given email already exists in the system.
      *
@@ -98,6 +100,7 @@ public class AppUserService implements UserDetailsService {
             throw e;
         }
     }
+
 
     /**
      * Encodes the user's password using BCrypt and saves the user to the repository.
@@ -115,6 +118,7 @@ public class AppUserService implements UserDetailsService {
             throw e;
         }
     }
+
 
     /**
      * Maps the roles of a user to Spring Security GrantedAuthorities.

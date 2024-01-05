@@ -126,6 +126,7 @@ public class RegistrationService {
                 .orElseThrow(() -> new UserNotFoundException("User not found after registration"));
     }
 
+
     /**
      * Handles errors during user ID retrieval after registration.
      *
@@ -135,4 +136,5 @@ public class RegistrationService {
     private void handleUserRetrievalError(String userEmail, Exception e) {
         log.error("Error retrieving user ID after registration for email: {}", userEmail, e);
     }
+
 }
