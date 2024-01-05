@@ -13,7 +13,6 @@ import java.io.IOException;
  * Custom authentication entry point for handling unauthorized access.
  * This class is responsible for responding to unauthorized requests with a 401 Unauthorized status and an error message.
  */
-
 @Component
 public class JWTAuthEntryPoint implements AuthenticationEntryPoint {
 

@@ -21,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * This class contains the main security configurations
  */
-
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
@@ -41,13 +40,13 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection for REST APIs
+                .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(authEntryPoint)
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless for JWT authentication
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                                 .invalidSessionUrl("/invalid-session")
                 )
                 .authorizeHttpRequests(auth -> {
