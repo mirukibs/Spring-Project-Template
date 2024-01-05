@@ -113,6 +113,7 @@ public class RegistrationService {
                 .orElseThrow(() -> new RoleNotFoundException("Role not found: USER"));
     }
 
+
     /**
      * Finds a user by email using the AppUserRepository.
      *
