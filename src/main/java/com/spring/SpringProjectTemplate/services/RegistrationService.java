@@ -101,6 +101,7 @@ public class RegistrationService {
         return appUser;
     }
 
+
     /**
      * Retrieves the default role ("USER") from the RoleRepository.
      *
