@@ -2,6 +2,7 @@ package com.spring.SpringCrudTemplate.services;
 
 import com.spring.SpringCrudTemplate.DTOs.RegistrationDTO;
 import com.spring.SpringCrudTemplate.DTOs.RegistrationResponseDTO;
+import com.spring.SpringCrudTemplate.exceptions.InvalidEmailFormatException;
 import com.spring.SpringCrudTemplate.exceptions.RoleNotFoundException;
 import com.spring.SpringCrudTemplate.exceptions.UserNotFoundException;
 import com.spring.SpringCrudTemplate.models.AppUser;
@@ -12,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -43,15 +45,25 @@ public class RegistrationService {
      *         indicating the success or failure of the registration process.
      */
     public ResponseEntity<RegistrationResponseDTO> registerUser(RegistrationDTO request) {
-        validateEmail(request.getEmail());
+        try {
+            validateEmail(request.getEmail());
 
-        AppUser appUser = createAppUserFromRequest(request);
+            AppUser appUser = createAppUserFromRequest(request);
 
-        Role role = getRoleByName();
+            Role role = getRoleByName();
 
-        appUser.setRoles(Collections.singletonList(role));
+            appUser.setRoles(Collections.singletonList(role));
 
-        return appUserService.signUpUser(appUser);
+            return appUserService.signUpUser(appUser);
+        } catch (InvalidEmailFormatException e) {
+            // Handle invalid email format exception
+            RegistrationResponseDTO errorResponse = new RegistrationResponseDTO("Invalid email format.", null);
+            return ResponseEntity.badRequest().body(errorResponse);
+        } catch (Exception e) {
+            // Handle other exceptions, such as EmailValidationException
+            RegistrationResponseDTO errorResponse = new RegistrationResponseDTO("Error during email validation.", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
 
