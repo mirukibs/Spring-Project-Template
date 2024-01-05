@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.spring</groupId>
-	<artifactId>Spring-Crud-Template</artifactId>
+	<artifactId>Spring-Project-Template</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Spring-Crud-Template</name>
+	<name>Spring-Project-Template</name>
 	<description>A Spring CRUD project template</description>
 	<properties>
 		<java.version>17</java.version>
