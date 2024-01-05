@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,14 +61,19 @@ public class RegistrationController {
      * Endpoint for user login.
      *
      * @param loginRequest The login request DTO
-     * @return ResponseEntity with the authentication token if login is successful
+     * @return ResponseEntity with a message indicating success or failure and the authentication token
      */
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginRequest) {
-        Authentication authentication = authenticateUser(loginRequest);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtGenerator.generateToken(authentication);
-        return ResponseEntity.ok(new AuthResponseDTO(token));
+        try {
+            Authentication authentication = authenticateUser(loginRequest);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = jwtGenerator.generateToken(authentication);
+            return ResponseEntity.ok(new AuthResponseDTO("Login successful.", token));
+        } catch (AuthenticationException e) {
+            // Handle authentication failure
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponseDTO("Invalid credentials.", null));
+        }
     }
 
     /**

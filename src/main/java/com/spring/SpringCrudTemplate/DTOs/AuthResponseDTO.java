@@ -11,6 +11,8 @@ import lombok.Data;
 @Data
 public class AuthResponseDTO {
 
+    private String message;
+
     private String accessToken;
 
     private String tokenType = "Bearer ";
@@ -20,7 +22,8 @@ public class AuthResponseDTO {
      *
      * @param accessToken The access token issued during authentication
      */
-    public AuthResponseDTO(String accessToken) {
+    public AuthResponseDTO(String message, String accessToken) {
+        this.message = message;
         this.accessToken = accessToken;
     }
 }
