@@ -10,6 +10,4 @@ public final class SecurityConstants {
      */
     public static final long JWT_EXPIRATION = 3_620_000;
 
-    // Add other security constants as required
-
 }
