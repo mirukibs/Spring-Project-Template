@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.spring.Spring-Crud-Template' is invalid and this project uses 'com.spring.SpringCrudTemplate' instead.
+* The original package name 'com.spring.Spring-Crud-Template' is invalid and this project uses 'com.spring.SpringProjectTemplate' instead.
 
 # Getting Started
 
