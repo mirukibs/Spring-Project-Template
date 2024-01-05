@@ -50,6 +50,7 @@ public class AppUser {
         this.password = password;
     }
 
+
     /**
      * Getter method for obtaining the username (which is the email address).
      *
