@@ -3,6 +3,7 @@ package com.spring.SpringCrudTemplate.controllers;
 import com.spring.SpringCrudTemplate.DTOs.AuthResponseDTO;
 import com.spring.SpringCrudTemplate.DTOs.LoginDTO;
 import com.spring.SpringCrudTemplate.DTOs.RegistrationDTO;
+import com.spring.SpringCrudTemplate.DTOs.RegistrationResponseDTO;
 import com.spring.SpringCrudTemplate.configurations.JWT.JWTGenerator;
 import com.spring.SpringCrudTemplate.services.RegistrationService;
 import lombok.AllArgsConstructor;
@@ -33,26 +34,27 @@ public class RegistrationController {
     private final AuthenticationManager authenticationManager;
     private final JWTGenerator jwtGenerator;
 
+
     /**
      * Endpoint for user registration.
      *
-     * @param userRequest The registration request DTO
-     * @return ResponseEntity with the registration status and, if successful, a location header for the new user
+     * @param userRequest The RegistrationDTO containing user registration information.
+     * @return ResponseEntity with the registration status and, if successful,
+     *         a location header for the new user along with a structured response in RegistrationResponseDTO.
      */
     @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> register(@RequestBody RegistrationDTO userRequest) {
-        ResponseEntity<String> responseEntity = registrationService.registerUser(userRequest);
+    public ResponseEntity<RegistrationResponseDTO> register(@RequestBody RegistrationDTO userRequest) {
+        ResponseEntity<RegistrationResponseDTO> responseEntity = registrationService.registerUser(userRequest);
 
-        // If registration is successful, create location header and return response
         if (responseEntity.getStatusCode() == HttpStatus.CREATED) {
             Long userId = registrationService.getSavedUserId(userRequest.getEmail());
             HttpHeaders headers = createLocationHeader(userId);
             return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(responseEntity.getBody());
         }
 
-        // If registration is not successful, return the original response
         return responseEntity;
     }
+
 
     /**
      * Endpoint for user login.

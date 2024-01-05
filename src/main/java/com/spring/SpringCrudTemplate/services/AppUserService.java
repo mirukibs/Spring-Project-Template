@@ -1,5 +1,6 @@
 package com.spring.SpringCrudTemplate.services;
 
+import com.spring.SpringCrudTemplate.DTOs.RegistrationResponseDTO;
 import com.spring.SpringCrudTemplate.models.AppUser;
 import com.spring.SpringCrudTemplate.models.Role;
 import com.spring.SpringCrudTemplate.repositories.AppUserRepository;
@@ -63,19 +64,22 @@ public class AppUserService implements UserDetailsService {
      * @param appUser The user to be registered.
      * @return ResponseEntity with the registration status and message.
      */
-    public ResponseEntity<String> signUpUser(AppUser appUser) {
+    public ResponseEntity<RegistrationResponseDTO> signUpUser(AppUser appUser) {
         if (userExists(appUser.getEmail())) {
             log.error(EMAIL_ALREADY_TAKEN_MSG, appUser.getEmail());
-            return new ResponseEntity<>("Email already taken", HttpStatus.CONFLICT);
+            return new ResponseEntity<>(new RegistrationResponseDTO("Email already taken", null), HttpStatus.CONFLICT);
         }
 
         try {
             encodeAndSaveUser(appUser);
             log.info(REGISTRATION_SUCCESSFUL_MSG, appUser.getEmail());
-            return new ResponseEntity<>("Congratulations! You have been registered successfully.", HttpStatus.CREATED);
+            RegistrationResponseDTO responseDTO = new RegistrationResponseDTO(
+                    "Congratulations! You have been registered successfully.", appUser.getEmail());
+            return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
         } catch (Exception e) {
             log.error(String.format(REGISTRATION_FAILED_MSG, appUser.getEmail()), e);
-            return new ResponseEntity<>("Internal Server Error.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new RegistrationResponseDTO("Internal Server Error.", null),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

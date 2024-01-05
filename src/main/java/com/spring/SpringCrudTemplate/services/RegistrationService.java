@@ -1,6 +1,7 @@
 package com.spring.SpringCrudTemplate.services;
 
 import com.spring.SpringCrudTemplate.DTOs.RegistrationDTO;
+import com.spring.SpringCrudTemplate.DTOs.RegistrationResponseDTO;
 import com.spring.SpringCrudTemplate.exceptions.RoleNotFoundException;
 import com.spring.SpringCrudTemplate.exceptions.UserNotFoundException;
 import com.spring.SpringCrudTemplate.models.AppUser;
@@ -38,9 +39,10 @@ public class RegistrationService {
      * Registers a new user based on the provided RegistrationDTO.
      *
      * @param request The RegistrationDTO containing user registration information.
-     * @return ResponseEntity indicating the success or failure of the registration process.
+     * @return ResponseEntity containing a structured response (RegistrationResponseDTO)
+     *         indicating the success or failure of the registration process.
      */
-    public ResponseEntity<String> registerUser(RegistrationDTO request) {
+    public ResponseEntity<RegistrationResponseDTO> registerUser(RegistrationDTO request) {
         validateEmail(request.getEmail());
 
         AppUser appUser = createAppUserFromRequest(request);
@@ -51,6 +53,7 @@ public class RegistrationService {
 
         return appUserService.signUpUser(appUser);
     }
+
 
     /**
      * Retrieves the user ID for a given email after successful registration.
