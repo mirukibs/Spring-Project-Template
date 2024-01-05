@@ -2,6 +2,11 @@ package com.spring.SpringCrudTemplate.DTOs;
 
 import lombok.*;
 
+/**
+ * Data Transfer Object (DTO) representing user registration information.
+ *
+ * This class is used to transfer registration details between the controller and service layers.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

@@ -2,6 +2,9 @@ package com.spring.SpringCrudTemplate.DTOs;
 
 import lombok.*;
 
+/**
+ * Data Transfer Object (DTO) representing login credentials for authentication.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
