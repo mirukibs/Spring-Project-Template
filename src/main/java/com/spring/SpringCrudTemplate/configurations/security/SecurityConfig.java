@@ -19,16 +19,26 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * This class contains the main security configurations
+ */
+
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
 
-    @Autowired
     private final AppUserService appUserService;
-    private JWTAuthEntryPoint authEntryPoint;
+    private final JWTAuthEntryPoint authEntryPoint;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    /**
+     * Configures the security filter chain for the application.
+     *
+     * @param http The HTTP security configuration
+     * @return The configured security filter chain
+     * @throws Exception If an error occurs during configuration
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -57,23 +67,37 @@ public class SecurityConfig extends GlobalAuthenticationConfigurerAdapter {
         return http.build();
     }
 
-
-
+    /**
+     * Configures the authentication manager for the application.
+     *
+     * @param authenticationConfiguration The authentication configuration
+     * @return The configured authentication manager
+     * @throws Exception If an error occurs during configuration
+     */
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /**
+     * Configures the DAO authentication provider for the application.
+     *
+     * @return The configured DAO authentication provider
+     */
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider =
-                new DaoAuthenticationProvider();
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(bCryptPasswordEncoder);
         provider.setUserDetailsService(appUserService);
         return provider;
     }
 
+    /**
+     * Creates and configures the JWT authentication filter.
+     *
+     * @return The configured JWT authentication filter
+     */
     @Bean
     public JWTAuthenticationFilter jwtAuthenticationFilter() {
         return new JWTAuthenticationFilter();

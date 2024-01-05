@@ -8,6 +8,11 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Optional;
 
+/**
+ * Configuration class for initializing predefined roles in the application.
+ * You could create a mechanism for an admin to create roles dynamically,
+ * but for the sake of simplicity, we will just create a few predefined roles.
+ */
 @Configuration
 public class RoleConfig {
 
@@ -18,6 +23,9 @@ public class RoleConfig {
         this.roleRepository = roleRepository;
     }
 
+    /**
+     * Initializes predefined roles during application startup.
+     */
     @PostConstruct
     public void initRoles() {
         createRoleIfNotExists("USER");
@@ -25,6 +33,11 @@ public class RoleConfig {
         // Add more predefined roles as needed
     }
 
+    /**
+     * Creates a role if it does not already exist in the repository.
+     *
+     * @param roleName The name of the role to be created
+     */
     private void createRoleIfNotExists(String roleName) {
         if (!roleRepository.existsByName(roleName)) {
             Role role = new Role();
@@ -32,4 +45,5 @@ public class RoleConfig {
             roleRepository.save(role);
         }
     }
+
 }

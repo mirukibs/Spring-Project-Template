@@ -1,7 +1,15 @@
 package com.spring.SpringCrudTemplate.configurations.security;
 
-public class SecurityConstants {
+/**
+ * Class containing security-related constants for the application.
+ */
+public final class SecurityConstants {
 
-    public static final long JWT_EXPIRATION = 3620000;
+    /**
+     * JWT token expiration time in milliseconds (1 hour by default).
+     */
+    public static final long JWT_EXPIRATION = 3_620_000;
+
+    // Add other security constants as required
 
 }
