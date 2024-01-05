@@ -6,19 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Represents a role in the system.
+ * Represents a role entity in the system.
  *
- * This class serves as a template for creating role entities.
- * Extend or modify this class based on your specific project requirements.
- *
- * Class Overview:
- * - Annotated with JPA annotations for persistence.
- * - Utilizes Lombok annotations to automatically generate getters, setters, and constructors.
- * - Includes fields for role details such as ID and name.
- *
- * Note: Developers should review and adapt this class based on project-specific requirements and best practices.
+ * This class is annotated with Lombok annotations for automatic generation of getter,
+ * setter, and no-args constructor. It is also annotated as an entity to be mapped to a database table.
  */
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,5 +24,4 @@ public class Role {
 
     @Column(unique = true)
     private String name;
-
 }
