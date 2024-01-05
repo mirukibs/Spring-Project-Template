@@ -55,9 +55,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
 
-        // Continue with the filter chain
         filterChain.doFilter(request, response);
     }
+
 
     /**
      * Extracts the JWT token from the Authorization header.

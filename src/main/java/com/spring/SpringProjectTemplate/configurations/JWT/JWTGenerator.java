@@ -37,6 +37,7 @@ public class JWTGenerator {
                 .compact();
     }
 
+
     /**
      * Extracts the username from a JWT token.
      *
@@ -51,6 +52,7 @@ public class JWTGenerator {
                 .getBody();
         return claims.getSubject();
     }
+
 
     /**
      * Validates the integrity and expiration of a JWT token.
